@@ -1,4 +1,6 @@
 const exec = require('cordova/exec');
+let inAppBrowserRef;
+let CONFIGPARAMS = {};
 
 const CONFIG = {
     url: "",
@@ -7,10 +9,6 @@ const CONFIG = {
     callbackSuccessURL: 'success',
     callbackErrorURL: 'failed',
 }
-
-var inAppBrowserRef;
-
-let CONFIGPARAMS = {};
 
 const startPayment = function(config, success, error) {
     Object.keys(CONFIG).forEach(function(k) {
@@ -77,15 +75,13 @@ function messageCallBack(params) {
         bubbles: false,
         detail: params
     }))
-    // if (event.origin !== "http://example.com")
-    //   return;
 }
 
 async function paymentChecks(event) {
     let data;
 
     if (typeof event != 'undefined' && typeof event.url != 'undefined' && event.url) {
-        if (event.url.match("https://payu.herokuapp.com/success") || event.url.includes(CONFIGPARAMS.callbackSuccessURL)) {
+        if (event.url.includes(CONFIGPARAMS.callbackSuccessURL)) {
             data = {
                 code: 'success'
             }
@@ -165,7 +161,6 @@ function isValidURL(str) {
         return false;
     }
 }
-
 
 module.exports = {
     startPayment
